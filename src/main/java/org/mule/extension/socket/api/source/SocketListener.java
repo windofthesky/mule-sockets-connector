@@ -9,7 +9,6 @@ package org.mule.extension.socket.api.source;
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 import static org.mule.extension.socket.internal.SocketUtils.WORK;
-
 import org.mule.extension.socket.api.SocketAttributes;
 import org.mule.extension.socket.api.config.ListenerConfig;
 import org.mule.extension.socket.api.connection.ListenerConnection;
@@ -26,6 +25,7 @@ import org.mule.runtime.core.exception.MessagingException;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
 import org.mule.runtime.extension.api.annotation.execution.OnError;
 import org.mule.runtime.extension.api.annotation.execution.OnSuccess;
+import org.mule.runtime.extension.api.annotation.execution.OnTerminate;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Optional;
@@ -34,14 +34,14 @@ import org.mule.runtime.extension.api.runtime.source.Source;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
 import org.mule.runtime.extension.api.runtime.source.SourceCallbackContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Listens for socket connections of the given protocol in the configured host and port.
@@ -102,6 +102,11 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
   public void onError(Error error, SourceCallbackContext context) {
     context.<SocketWorker>getVariable(WORK)
         .ifPresent(woker -> woker.onError(error.getCause()));
+  }
+
+  @OnTerminate
+  public void onTerminate() {
+    //nothing to do
   }
 
   /**
