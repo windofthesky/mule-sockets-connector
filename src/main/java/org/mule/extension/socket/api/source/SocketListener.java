@@ -18,6 +18,7 @@ import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Error;
 import org.mule.runtime.api.scheduler.Scheduler;
 import org.mule.runtime.core.api.MuleContext;
+import org.mule.runtime.core.api.scheduler.SchedulerService;
 import org.mule.runtime.core.api.exception.MessagingException;
 import org.mule.runtime.core.api.scheduler.SchedulerService;
 import org.mule.runtime.extension.api.annotation.dsl.xml.XmlHints;
@@ -79,11 +80,13 @@ public final class SocketListener extends Source<InputStream, SocketAttributes> 
    */
   @Override
   public void onStart(SourceCallback<InputStream, SocketAttributes> sourceCallback) throws MuleException {
+    // TODO use MG feature to set the right flow anme
     workManager = schedulerService
         .ioScheduler(muleContext.getSchedulerBaseConfig().withName(format("%s.socket.worker", flowInfo.getName())));
 
     stopRequested.set(false);
 
+    // TODO use MG feature to set the right flow anme
     listenerExecutor = schedulerService.customScheduler(muleContext.getSchedulerBaseConfig().withMaxConcurrentTasks(1)
         .withName(format("%s.socket.listener", flowInfo.getName())));
     submittedListenerTask = listenerExecutor.submit(() -> listen(sourceCallback));
