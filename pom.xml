@@ -23,7 +23,7 @@
         <assertJVersion>3.3.0</assertJVersion>
         <commonsIoVersion>2.4</commonsIoVersion>
         <guavaVersion>18.0</guavaVersion>
-        <muleSpringModuleVersion>2.0.0-greenarrow</muleSpringModuleVersion>
+        <muleSpringModuleVersion>1.0.0-greenarrow</muleSpringModuleVersion>
     </properties>
 
     <dependencies>
